@@ -1,0 +1,634 @@
+
+<script>
+
+//falta: que el submit luego e apretar se deshabilite y borre todas las preguntas
+//que valide bien y no a la suma de 2 
+//revisar la logica del testing pos acondicionado, está mal tiene que ir a "REAPCKING"
+//que cada vez que respondo deshabilite el boton -->deshabilito la pregunta que ya marqué pero no todo
+//revisar diferencia de DIVS entre CATEGORIA y los SI/NO
+// que"enviar a rezago" sea en rojo
+//en vez de appendear el mensaje de "error" puedo dejar el div o un p y cambio el innerhtml, 
+                    //de esa forma, un doble error cambia dos veces el inner html y no sigue apendiando
+                    
+//VER AGREGAR CASOS FRAUDE
+
+
+
+//Deshabilito los selectores hasta que esté todo completo:
+
+$(window).on('load',function(){
+        $('#myModal').modal('show');
+        
+    });
+
+document.getElementById("moda").disabled = true
+document.getElementById("electro").disabled = true
+document.getElementById("tools").disabled = true
+document.getElementById("sub").disabled = true
+document.getElementById("id").disabled = true
+document.getElementById("sku").disabled = true
+document.getElementById("kaiosama").style.zIndex=1
+document.getElementById("categoriasGrupo").style.display = 'none'
+
+
+//esconder todo:
+//document.getElementById("general").style.display = 'none'
+//document.getElementById("PantallaInicial").style.display = 'block'
+document.getElementById("id").style.display = 'block'
+
+// Prevent forms from submitting.
+
+  function preventFormSubmit() {
+    var forms = document.querySelectorAll('form');
+    for (var i = 0; i < forms.length; i++) {
+      forms[i].addEventListener('submit', function(event) {
+      event.preventDefault();
+      });
+    }
+  }
+  window.addEventListener('load', preventFormSubmit);    
+            
+  function handleFormSubmit(formObject) {
+    google.script.run.processForm(formObject);
+    document.getElementById("myForm").reset();
+
+  }
+   
+
+ 
+var validador = 0
+
+ 
+//Importo preguntas desde GS (hoja de cálculos) | dejo abierto el script hasta el final para que el objeto 
+//PREGUNTAS este disponible, es una variable global lo que no es muy correcto pero bueh
+
+google.script.run.withSuccessHandler(onSuccess)
+                      .getPreguntas();
+               
+function onSuccess(preguntas) {
+
+
+
+//boton manual
+
+document.getElementById("manual").onclick = ocultarPantallas
+
+function ocultarPantallas (){
+  document.getElementById("roshi").style.display = 'none'
+  document.getElementById("kaiosama").style.display = 'none'}
+
+
+//boton de reset 
+
+document.getElementById("sub").onclick = reloading
+
+function reloading () {
+console.log('reset')
+//modalFinal
+$('#modalFinal').modal('toggle');
+
+/*
+
+//recargo pantallas y elementos:
+
+$('#cuestionario').css("display", "block")
+
+//borro el mensaje final y datos
+document.getElementById("mensajeFinal").remove()
+document.getElementById("titulo1").innerHTML= ''
+document.getElementById("titulo2").innerHTML= ''
+document.getElementById("titulo3").innerHTML= ''
+
+//saco el cuestionario
+
+document.getElementById("preguntas1").remove()
+
+//mostrar los label de nuevo
+
+document.getElementById("idPadre").style.display = 'block'
+document.getElementById("skuPadre").style.display = 'block'
+
+//agrego las pantallas 
+
+//document.getElementById("roshi").style.display = 'block'
+//document.getElementById("kaiosama").style.display = 'block'
+
+//hago foco:
+document.getElementById("id").focus()
+
+//habilito todos los botones radio
+
+var inputs = document.getElementsByTagName('input');
+for (var i=0, iLen=inputs.length; i<iLen; i++) {
+  inputs[i].disabled = false;
+  
+//pongo la fecha
+
+var hoy = new Date().toJSON().slice(0,10).replace(/-/g,'/')
+console.log(hoy)
+document.getElementById("fecha").valueAsDate = new Date()
+
+
+
+} 
+
+*/
+
+}
+
+
+document.getElementById("id").disabled = false
+document.getElementById("sku").disabled = false
+
+
+document.getElementById("id").focus()
+
+var hoy = new Date().toJSON().slice(0,10).replace(/-/g,'/')
+console.log(hoy)
+document.getElementById("fecha").valueAsDate = new Date()
+document.getElementById("fecha").onblur = console.log(document.getElementById("fecha").value)
+$('#myModal').modal('toggle');
+
+//Evento validaciones
+
+//document.getElementById("fecha").onblur = validarCompletado
+document.getElementById("id").onblur =  validarCompletado
+document.getElementById("sku").onblur =  validarCompletado
+
+
+//Setear País | por default es MLA, si lo cambia, de ahora en más tomará el cambiado
+
+document.getElementById("mercado").onchange =  setMercado
+
+function setMercado(e){
+//guardo el valor seleccionado
+var mercado = e.target.value
+//lo stringifeo y lo mando al local storage
+var strMercado = JSON.stringify(mercado)
+localStorage.setItem('mercado', strMercado)
+}
+
+//Si existe el valor en local storage, lo toma directo
+
+var strMercadoLstorage = localStorage.getItem('mercado')
+
+if (strMercadoLstorage){
+console.log('lo guardado en storage es:  ' +strMercadoLstorage)
+var MercadoLstorage = JSON.parse(strMercadoLstorage)
+var mercadoEnHtml = document.getElementById("mercado")
+console.log('donde voy a guardar es: ' + mercadoEnHtml.value) 
+mercadoEnHtml.value = MercadoLstorage
+
+}
+
+
+
+//document.getElementById("electro").onchange =  sumarPregunta
+//document.getElementById("tools").onchange =  sumarPregunta
+
+//funciona finalizadora:
+
+function final (r) {if (r) {
+$('#cuestionario').css("display", "none")
+let respuestaFinal = document.createElement('div')
+respuestaFinal.setAttribute("class","alert")
+respuestaFinal.setAttribute("name","respuesta")
+respuestaFinal.setAttribute("id","mensajeFinal")
+respuestaFinal.classList.add("alert-success")
+
+respuestaFinal.innerHTML = "Proceso Finalizado | " + r;
+
+              if (r.includes('Rezago')){respuestaFinal.classList.add("alert-danger")}
+
+
+
+document.getElementById("final").appendChild(respuestaFinal)
+document.getElementById("sub").disabled = false 
+//document.getElementById("sub").innerHTML = r
+
+let respfinal = document.createElement('Input')
+respfinal.setAttribute("name", "respuesta")
+respfinal.setAttribute("id", "respuesta")
+respfinal.setAttribute("class", "d-none")
+respfinal.value = r
+document.getElementById("preguntas1").appendChild(respfinal)
+
+} 
+}
+
+
+//focus | salta campo con enter / S y N
+
+//KEY S=83 
+//KEY N=78
+
+
+var saltoEnter = document.getElementById("id");
+saltoEnter.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+   event.preventDefault();
+   document.getElementById("sku").focus();
+   //oculto la imagen de request
+   document.getElementById("roshi").style.display = 'none'
+   //deshabilito el label e input
+   document.getElementById("idPadre").style.display = 'none'
+  }
+})
+
+//con enter se va el focus del segundo
+
+var saltoEnter = document.getElementById("sku");
+saltoEnter.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+   event.preventDefault();
+   document.getElementById("sku").blur();
+   //oculto la imagen de request
+      document.getElementById("kaiosama").style.display = 'none'
+      //oculto el label e input
+document.getElementById("skuPadre").style.display = 'none'
+      //agrego titulo con los valores ingresados
+      
+      let shipment = document.getElementById("id").value
+      let meli = document.getElementById("sku").value
+      
+      document.getElementById("titulo1").innerHTML= 'Shipment ID:        ' + shipment 
+      console.log('este es el titulo 1' + document.getElementById("titulo1").innerHTML)
+      document.getElementById("titulo2").innerHTML= 'MELI SKU:        ' + meli
+      $('#modalCategorias').modal('show')
+  }
+})
+
+
+
+var saltoS = document.getElementsByTagName("input");
+saltoEnter.addEventListener("keyup", function(event) {
+  if (event.keyCode === 83) {
+   event.preventDefault();
+console.log('SI SI SI')
+}
+})
+
+
+
+//Botones Modal Categorías
+
+document.getElementById("btI").onclick = cerrarModal
+document.getElementById("btE").onclick = cerrarModal
+document.getElementById("btH").onclick = cerrarModal
+document.getElementById("btD").onclick = cerrarModal
+
+
+//cierro el modal y selecciono el boton radial que corresponda y ejecuto la función de la primera pregunta Definir Categoria
+
+function cerrarModal(e){
+$('#modalCategorias').modal('hide')
+console.log(e.target.id)
+
+if (e.target.id === 'btI'){
+var categ = document.getElementById("moda")
+categ.checked = true;
+console.log(categ)
+var tipo = 'Indumentaria'
+definirCategoria('Indumentaria')}
+
+if (e.target.id === 'btE'){
+var categ = document.getElementById("electro")
+categ.checked = true;
+var tipo = 'Electrónica'
+definirCategoria('Electrónica')}
+
+if (e.target.id === 'btH'){
+var categ = document.getElementById("tools")
+categ.checked = true;
+var tipo = 'Herramientas'
+definirCategoria('Herramientas')}
+
+if (e.target.id === 'btD'){
+var categ = document.getElementById("deco")
+categ.checked = true;
+var tipo = 'Home&Deco'
+definirCategoria('Home&Deco')}
+
+
+document.getElementById("titulo3").innerHTML= 'Categoría:        ' + tipo 
+
+
+}
+
+
+function definirCategoria (valor){
+
+var textoPregunta = ''
+var idPregunta = ''
+var seccion = ''
+var respuesta = ''
+
+if (valor == 'Indumentaria' ) {
+textoPregunta = preguntas[0].Texto
+idPregunta = '0'
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+
+} 
+
+
+if (valor == 'Electrónica' ) {
+textoPregunta = preguntas [19].Texto
+idPregunta = 19
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+} 
+
+if (valor == 'Herramientas' ) {
+textoPregunta = preguntas [29].Texto
+idPregunta = 29
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+} 
+
+
+if (valor == 'Home&Deco' ) {
+textoPregunta = preguntas [39].Texto
+idPregunta = 39
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+}
+
+
+} 
+  
+function sumarPregunta (e) 
+         {
+         
+         //estructura preguntas - Creo elementos-
+        
+var textoPregunta = ''
+var idPregunta = ''
+var seccion = ''
+var respuesta = ''
+console.log(e.target.value)
+
+//Selecciono pregunta2:
+
+//sección 1
+
+if (e.target.value == 'Indumentaria' ) {
+textoPregunta = preguntas[0].Texto
+idPregunta = '0'
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+} 
+
+
+
+if (e.target.value == 'Electrónica' ) {
+textoPregunta = preguntas [19].Texto
+idPregunta = 19
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+} 
+
+
+if (e.target.value == 'Herramientas' ) {
+textoPregunta = preguntas [29].Texto
+idPregunta = 29
+seccion = '1'
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+final (respuesta)
+} 
+
+
+//DEFINIR QUE VOY A PONER EN EL TARGET VALUE, QUE ESO ES LO QUE DECIDE COMO ENTRAR A PREGUNTA[I]
+//TIENE QUE SER ALGO QUE DICE, DE QUE PREGUNTA VENGO (EL ID) Y SI ELGÍ SI O NO
+// PAA DETECTAR EL SI O NO USAR EL includes() Y ASÍ SABEMOS SI ES SI O NO!!!!
+
+//recibo de la pregunta anterior: si es un si o es un no --> con esto defino el destino
+//¿que pregunta tengo que poner? --> id de pregunta de la que vengo + destino si/no --> da el id de la pregunta que tengo que poner
+
+console.log(preguntas)
+
+if (e.target.value.includes('si')) {
+
+//numero es el ID que trae de la pregunta anterior (el idPregunta)
+var id = e.target.id
+var numero = e.target.name
+console.log("este es el name: " + numero)
+console.log("este es el destino" + preguntas[numero].DestinoSi)
+
+if(isNaN(preguntas[numero].DestinoSi)){
+
+respuesta = preguntas[numero].DestinoSi
+
+}else{
+
+
+//id pregunta será el que corresponda a la próxima pregunta, resto uno porque el array arranca en 0 y el excel en 1
+idPregunta = (preguntas[numero].DestinoSi - 1) 
+
+//la pregunta en el lugar marcado por idPregunta
+
+textoPregunta = preguntas [idPregunta].Texto
+
+//poner una sección que vaya avanzando
+
+seccion = id
+
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+}
+
+final (respuesta)
+} 
+
+if (e.target.value.includes('no') ) {
+
+
+//numero es el ID que trae de la pregunta anterior (el idPregunta)
+var id = e.target.id
+var numero = e.target.name
+console.log("este es el name: " + numero)
+console.log("este es el destino" + preguntas[numero].DestinoNo)
+
+if(isNaN(preguntas[numero].DestinoNo)){
+
+respuesta = preguntas[numero].DestinoNo
+
+}else{
+
+
+//id pregunta será el que corresponda a la próxima pregunta, resto uno porque el array arranca en 0 y el excel en 1
+idPregunta = (preguntas[numero].DestinoNo - 1) 
+
+//la pregunta en el lugar marcado por idPregunta
+
+textoPregunta = preguntas [idPregunta].Texto
+
+//poner una sección que vaya avanzando
+
+seccion = id
+
+insertPreguntas(textoPregunta,idPregunta,seccion)
+document.getElementById(idPregunta + "_si").onchange =  sumarPregunta
+document.getElementById(idPregunta + "_no").onchange =  sumarPregunta
+}
+
+final (respuesta)
+
+
+
+} 
+
+
+//deshabilito la pregunta que ya marqué
+//ojo está deshabilitando el target y NO todo
+e.target.disabled = true
+}
+
+
+
+
+
+
+
+
+//Funciones
+
+
+function insertPreguntas (textoPregunta,idPregunta, seccion) {
+
+let div1 = document.createElement('div')
+div1.setAttribute("class","form-group")
+div1.setAttribute("id","d1" + seccion )
+
+let div2 = document.createElement('div')
+div2.setAttribute("class", "form-group fondito")
+div2.setAttribute("id","d2"+ seccion)
+
+let titulo= document.createElement('p')
+titulo.setAttribute("class", "color-pregunta")
+titulo.innerHTML = textoPregunta
+titulo.setAttribute("id","t"+ seccion)
+
+let divpregunta = document.createElement('div')
+divpregunta.setAttribute("class", "form-check")
+divpregunta.setAttribute("id","divpreg"+ seccion)
+
+let divpregunta2 = document.createElement('div')
+divpregunta.setAttribute("class", "form-check form-check-inline")
+divpregunta.setAttribute("id","divpreg"+ seccion)
+
+let label1a = document.createElement('Label')
+titulo.setAttribute("class", "color-pregunta")
+label1a.innerHTML = "Si"
+
+let pregunta1a = document.createElement('Input')
+pregunta1a.setAttribute("type", "radio");
+pregunta1a.setAttribute("name", idPregunta)
+pregunta1a.setAttribute("accesskey", "s")
+pregunta1a.setAttribute("id", idPregunta + '_si')
+pregunta1a.setAttribute("value", idPregunta + '_si')
+
+let label1b = document.createElement('Label')
+titulo.setAttribute("class", "color-pregunta")
+label1b.innerHTML = "No"
+
+let pregunta1b = document.createElement('Input')
+pregunta1b.setAttribute("type", "radio");
+pregunta1b.setAttribute("name", idPregunta)
+pregunta1b.setAttribute("accesskey", "n")
+pregunta1b.setAttribute("id", idPregunta + '_no')
+pregunta1b.setAttribute("value", idPregunta + '_no')
+
+//estructura preguntas - Appendeo
+
+document.getElementById("preguntas1").appendChild(div1)
+document.getElementById("d1"+ seccion).appendChild(div2)
+document.getElementById("d2"+ seccion).appendChild(titulo)
+document.getElementById("d2"+ seccion).appendChild(divpregunta)
+
+document.getElementById("divpreg"+ seccion).appendChild(pregunta1a)
+document.getElementById("divpreg"+ seccion).appendChild(label1a)
+
+document.getElementById("d2"+ seccion).appendChild(divpregunta)
+document.getElementById("divpreg"+ seccion).appendChild(pregunta1b)
+document.getElementById("divpreg"+ seccion).appendChild(label1b)
+ }};
+ 
+//Función de validación
+
+
+function validarCompletado(e){
+if (e.target.value == '' ) {
+
+//no está validado:
+
+//geteo el elementvyid validarCompleto, y su es nulo no hago nada
+//traigo el div padre y le pongo la propieda rojo
+
+let nodo = e.target
+
+nodo.classList.add("is-invalid")
+
+let padre = nodo.parentNode
+
+let nodoMensaje = document.createElement('div')
+nodoMensaje.setAttribute("class","invalid-feedback")
+nodoMensaje.setAttribute("id","mensajemalo")
+nodoMensaje.innerHTML = '*campo obligatorio'
+
+padre.appendChild(nodoMensaje)
+
+if (validador === 0){}else{
+
+validador = (validador - 1)
+console.log(validador)}
+
+}
+    else{
+    //está validado, entonces.
+    
+    let nodo = e.target
+   
+    nodo.classList.remove("is-invalid")
+    
+    validador = validador +1 
+    console.log(validador)
+    
+     if (validador >= 2) {
+
+document.getElementById("moda").disabled = false
+document.getElementById("electro").disabled = false
+document.getElementById("tools").disabled = false
+} else {
+
+document.getElementById("moda").disabled = true
+document.getElementById("electro").disabled = true
+document.getElementById("tools").disabled = true
+
+}   
+
+}}
+
+</script>
+

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base target="_top">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+         <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <?!= include('Styles'); ?>    
+    </head>
+   
+    <body>
+    
+ 
+
+  <!-- Modal Inicio -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Iniciando MODO TESTING</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          Un momento por favor... 
+        </div>
+       
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <!-- Modal Categorías -->
+  <div class="modal" id="modalCategorias">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Categoría</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          Seleccione la categoría del producto 
+        </div>
+       <div class="modal-footer">
+            <button id="btI"type="button" class="btn btn-primary">Indumentaria</button>
+            <button id="btE" type="button" class="btn btn-danger">Electrónicos</button>
+            <button id="btH" type="button" class="btn btn-warning">Herramientas</button>
+            <button id="btD" type="button" class="btn btn-success">HomeDeco</button>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+  
+  
+   
+   <!-- Comienza el Body -->
+   
+   
+   <div id="dios">
+                         
+    <div id="roshi"> 
+   <img src="https://drive.google.com/uc?id=1Y3IxvycbTI2sr4gENk8UF-d8ay-xRVOZ">
+   <button id="manual"type="button" class="btn btn-primary">Ingreso Manual</button>   
+   </div>
+   <div id="kaiosama"> 
+   <img  src="https://drive.google.com/uc?id=1chS6UplmfgDb7xCq_OjwcOoPRUq4q2uA">
+   </div>
+
+<h1 class="display-4 mb-4 text-left"><img style="width:48,75px;height:40px;" src ="https://http2.mlstatic.com/ui/navigation/2.0.4/mercadolibre/logo__small@2x.png"></h1>
+   
+   <div class="goku padre container" id="general">
+   
+      <div class="padre row"  >
+                <div class="padre col-sm">
+                    <div class="container">
+                     <div class="row">
+                      <div class="col-sm"id="titulo1"></div>
+                      <div class="col-sm"id="titulo2"></div>
+                      <div class="col-sm"id="titulo3"></div>
+                     </div>
+                </div>
+                
+                
+                <form id="myForm" onsubmit="handleFormSubmit(this)">
+                    <div id='cuestionario'>
+                        <div class="form-row" >
+                            <div class="form-group col-md-6 ">
+                                <label for="dateOfBirth" >Fecha de Ingreso</label>
+                                <input type="date" class="form-control anchoFijo" id="fecha" name="fecha">
+                            </div>
+                            
+                            <div class="form-group">
+                               <label for="origen">Origen</label>
+                               <select class="form-control" id="origen" name="origen">
+                               <option>Returns</option>
+                               <option>Quality</option>
+                               <option>Otro</option>
+                               </select>
+                            </div>
+                            
+                                                        
+                            <div class="form-group">
+                               <label for="Mercado">Mercado</label>
+                               <select class="form-control" id="mercado" name="mercado">
+                               <option>MLA</option>
+                               <option>MLB</option>
+                               <option>MLM</option>
+                               </select>
+                            </div>
+                               
+                               <div id="rojo">
+                               <div class="form-group">
+                               <label for="Fraude">Fraude</label>
+                               <select class="form-control" id="fraude" name="fraude">
+                               <option>No</option>
+                               <option>Si</option>
+                               </select>
+                            </div>
+                            </div>
+                            
+                            <p>El sistema permite avanzar por las opciones SI/NO presioando alt+s y alt+n</p>   
+                               
+                            <div class="form-group col-md-6" id="idPadre">
+                                <label for="first_name" id="idLabel">ID Devolución</label>
+                                <input type="text" class="form-control hijitos" id="id" name="id" placeholder="ID Devolución">
+                            </div>
+                            <div class="form-group col-md-6" id="skuPadre">
+                                <label for="last_name">Meli SKU</label>
+                                <input type="text" class="form-control hijitos" id="sku" name="sku" placeholder="Meli SKU" onchange="">
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div class="form-row"  id="preguntas1" >
+                            <div class="form-group fondito" id="categoriasGrupo"  >
+                                <p class="breadcrumb">Categoría</p>
+                                
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="clasif" id="moda" value="Indumentaria">
+                                    <label class="form-check-label " for="male">Moda</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="clasif" id="electro" value="Electrónica">
+                                    <label class="form-check-label" for="female">Electronics</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="clasif" id="tools" value="Herramientas">
+                                    <label class="form-check-label" for="female">Herramientas</label>
+                               </div>
+                               <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="clasif" id="deco" value="Home&Deco">
+                                    <label class="form-check-label" for="female">HomeDeco</label>
+                               </div>
+                            
+                            
+                           </div>
+                            
+                         </div>
+                        </div>
+                         
+                        
+                        
+                        <div class="container" id="final"></div>
+                        
+                        <div class="center"><button id="sub" type="submit" class="btn btn-primary btn-block center">Finalizar</button></div>    
+                        
+                   
+                    </form>
+                    
+                    
+                    <div id="output"></div>
+                    
+                </div>
+            </div>      
+        </div>
+        
+       
+                  
+        </div>
+        
+        
+     <!--Modal Final -->
+  <div class="modal" id="modalFinal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Ingreso Finalizado</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" id="modalFinalBody">
+         Presione F5 para Re Iniciar.
+        </div>
+       <div class="modal-footer">
+
+      </div>
+      
+      </div>
+    </div>
+  </div>   
+        
+        
+
+    </body>
+    
+    <?!= include('JavaScript2'); ?>
+    
+</html>

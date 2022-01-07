@@ -1,0 +1,149 @@
+<style>
+
+@import url('https://fonts.googleapis.com/css?family=Proxima+Nova')
+
+body {
+background-color: #EEEEEE;
+
+	font-family: Tahoma, Geneva, sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+#rojo {
+border-color: red;
+color:red
+}
+
+#titulo1{
+padding: 10px;
+font-weight: bold;
+  font-size: 20px;
+} 
+
+#titulo2{
+padding: 10px;
+font-weight: bold;
+  font-size: 20px;
+} 
+
+#titulo3{
+padding: 10px;
+font-weight: bold;
+  font-size: 20px;
+} 
+
+
+#dios{position: relative
+background-color: #333333}
+
+#kaiosama{
+
+position: absolute;
+width:100%;
+z-index:5;
+background-image: url("https://drive.google.com/uc?id=1Y3IxvycbTI2sr4gENk8UF-d8ay-xRVOZ")
+
+ /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+}
+
+#roshi{
+
+position: absolute;
+width:100%;
+z-index:3;
+background-image: url("https://drive.google.com/uc?id=1Y3IxvycbTI2sr4gENk8UF-d8ay-xRVOZ")
+
+/* Full height */
+ height: 100%; 
+
+/* Center and scale the image nicely */
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+
+  
+}
+
+
+#goku{
+position: absolute;
+z-index:-2;
+}
+
+
+
+
+h1 {
+  background-color: #ffdb15;
+}
+
+
+
+.container {
+background-color: #EEEEEE
+}
+
+
+#cuestionario{
+background-color: white;
+border: 2px solid #FAFAFA;
+border-radius: 6px;
+padding:10px;
+
+}
+
+#titulos {font-weight: bold;
+padding: 10px; 
+}
+
+label {font-weight: bold;
+padding: 10px; 
+}
+
+input{border-top-style: none;
+  border-right-style: none;
+  border-bottom-style: solid;
+  border-left-style: none}
+
+.fondito{
+background-color: #FAFAFA;
+
+  border: 2px solid grey;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  max-width: auto;
+  height: auto;
+}
+
+#fecha{max-width: 200px}
+#sub {max-width: 200px}
+
+.hijitos {max-width: 200px}
+
+.padre{width:100%}
+
+div.center {
+  text-align: right;
+  padding: 10px;
+  color: #333333
+}
+
+button { margin-left: auto;
+  margin-right: 0px;}
+  
+  
+.color-pregunta{
+background-color:#ffdb15}
+  
+  
+
+</style>

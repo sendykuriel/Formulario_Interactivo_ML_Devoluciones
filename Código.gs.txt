@@ -1,0 +1,145 @@
+function doGet(request) {
+  return HtmlService.createTemplateFromFile('Index').evaluate();
+}
+
+/* @Include JavaScript and CSS Files */
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename)
+      .getContent();
+}
+ 
+/* @Process Form */
+function processForm(formObject) {
+  var url = "https://https://docs.google.com/spreadsheets/d/1l8Z6fcTfqD9CeekklPnzfpGesegADi5fkWrilhzd2gY/edit#gid=0";
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws = ss.getSheetByName("Data");
+  
+  //esto va por name
+  ws.appendRow([formObject.id,
+                formObject.sku,
+                formObject.clasif,
+                formObject.origen,
+                formObject.mercado,
+                formObject.fraude,
+                formObject.fecha,
+                formObject.respuesta]);
+}
+
+/*Objtener info del planilla (preguntas) */
+
+/**
+ * Returns the ID and name of every task list in the user's account.
+* @return {Array.<Object>} The task list data.
+ */
+
+
+function getPreguntas(){
+
+  var url = "https://https://docs.google.com/spreadsheets/d/1l8Z6fcTfqD9CeekklPnzfpGesegADi5fkWrilhzd2gY/edit#gid=0";
+  var ss = SpreadsheetApp.openByUrl(url);
+  var ws = ss.getSheetByName("Preguntas")
+  
+  
+  //agregar un for que recorra todas las preguntas y las agregue en el objeto PREGUNTAS y luego en el ARRAY DE OBJETOS
+  
+  
+  //arranco del 2
+  var preguntasListado = []
+  
+  for (var i = 2; i < 200; i++){
+  //agregar un conteo de columnas!!
+    
+    
+  var rangoIdPreguntas = ws.getRange(i,1)  
+  var rangoPreguntas = ws.getRange(i,2)
+  var rangoRtaSi = ws.getRange(i,3)
+  var rangoRtaNo = ws.getRange(i,4)
+  
+  //saco la info del range y la convierto a string
+  var preguntaArr1 = rangoPreguntas.getValues()
+  var preguntaArr2 = preguntaArr1[0]
+  var pregunta = preguntaArr2[0]
+  
+   var idArr1 = rangoIdPreguntas.getValues()
+  var idArr2 = idArr1[0]
+  var id = idArr2[0]
+  
+   var siArr1 = rangoRtaSi.getValues()
+  var siArr2 = siArr1[0]
+  var si = siArr2[0]
+  
+ var noArr1 = rangoRtaNo.getValues()
+  var noArr2 = noArr1[0]
+  var no = noArr2[0]  
+  
+
+  //creo objeto con los strings
+
+  function creaPreguntas(id, texto, destinoSi, destinoNo) { 
+	this.Id = id;
+	this.Texto = texto;
+	this.DestinoSi = destinoSi;
+	this.DestinoNo = destinoNo;
+}
+    
+  preguntasListado[i-2] = new creaPreguntas(id, pregunta, si, no);
+  
+   Logger.log(preguntasListado)
+  
+  }
+     Logger.log(preguntasListado)
+  return preguntasListado 
+  
+  }
+
+ 
+  
+  
+//  creo un objeto por pregunta con las preguntas preguntas[i][j]
+  
+
+
+
+//Armar un array con objetos:
+
+/*
+
+for (var i = 0; i < players.length; i++){
+
+function creaPreguntas(id, texto, destinoSi, destinoNo) { 
+	this.Id = id;
+	this.Texto = texto;
+	this.DestinoSi = destinoSi;
+	this.DestinoNo = destinoNo;
+}
+
+var preguntasListado[i] = new creaPreguntas("Alcatel", "5 onzas", "5 pulgadas", "Negro");
+}
+*/
+
+
+
+function getPreg() {
+  var listaPreguntas = Tasks.Tasklists.list().getItems();
+  if (!taskLists) {
+    return [];
+  }
+  return taskLists.map(function(taskList) {
+    return {
+      id: taskList.getId(),
+      pregunta: taskList.getTitle(),
+      destinoSi:taskList.getDestinoSi(),
+      destinoNo:taskList.getDestinoNo()
+    };
+  });
+}
+
+
+
+    function getNewHtml(e) {
+      var html = HtmlService
+        .createTemplateFromFile('index') // uses templated html
+        .evaluate()
+        .getContent();
+      return html;
+    }
